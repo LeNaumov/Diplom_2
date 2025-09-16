@@ -18,13 +18,9 @@ class UserMethods:
 
     @staticmethod
     @allure.step("Удаляем пользователя")
-    def user_delete(email, password):
-        access_token = UserMethods.user_get_token(email, password)
-        response = requests.delete(f'{urls.BASE_URL}{urls.USER_DELETE}', headers={"Authorization": f"Bearer {access_token}"})
-        if response.status_code == 202:
-            print(f"User {email} deleted successfully.")
-        else:
-            print(f"Failed to delete user {email}. Response: {response.text}")
+    def user_delete(token):
+        headers = {"Authorization": token}
+        return requests.delete("https://stellarburgers.nomoreparties.site/api/auth/user", headers=headers)
 
     @staticmethod
     @allure.step("Logout пользователя")

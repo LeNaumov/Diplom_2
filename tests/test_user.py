@@ -8,12 +8,8 @@ class TestUserCreate:
     @allure.title('Тестирование успешного создания уникального пользователя')
     @allure.description('Тут проверяем, что пользователь создается с сгенерированными данными')
     def test_user_create_success(self, create_user_data_and_delete):
-        user_data = create_user_data_and_delete
-        user_register_body = {"email": user_data["email"],
-                              "name": user_data["name"],
-                              "password": user_data["password"],
-                              }
-        with allure.step(f'Создаём пользователя с данными: {user_register_body}'):
+        user_register_body = create_user_data_and_delete[0]
+        with allure.step(f'Создаём курьера с данными: {user_register_body}'):
             response = UserMethods.user_create(user_register_body)
         expected_data = data.ResponseData.USER_CREATION_SUCCESS
 

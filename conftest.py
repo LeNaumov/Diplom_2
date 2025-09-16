@@ -21,20 +21,24 @@ def create_user_and_delete():
     yield user_data
 
     with allure.step('Удаляем созданного пользователя'):
-        UserMethods.user_delete(email, password)
+        UserMethods.user_delete(access_token)
 
 @pytest.fixture()
 def create_user_data_and_delete():
-    with allure.step('Получаем сгенерированные данные пользователя'):
-        user_data = generators.generate_user_body()
-    name = user_data['name']
-    password = user_data['password']
-    email = user_data['email']
+    with allure.step('Получаем сгенерированные данные курьера'):
+        user_register_body = generators.generate_user_body()
+        email = user_register_body['email']
+        password = user_register_body['password']
 
-    yield user_data
+        user_login_body = {'email': email, 'password': password}
+    yield [user_register_body, user_login_body, email, password]
+    
+    with allure.step('Логинимся в систему созданным курьером'):
+        user = UserMethods.user_login(user_login_body)
+        token = user.json().get("accessToken")
 
-    with allure.step('Удаляем созданного пользователя'):
-        UserMethods.user_delete(email, password)
+    with allure.step('Удаляем созданного курьера'):
+        UserMethods.user_delete(token)
 
 
 @pytest.fixture()
